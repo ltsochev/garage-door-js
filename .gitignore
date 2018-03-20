@@ -1,0 +1,9 @@
+/vendor
+/node_modules
+/.vscode
+Homestead.json
+Homestead.yaml
+composer.phar
+composer.lock
+.DS_Store
+Thumbs.db
