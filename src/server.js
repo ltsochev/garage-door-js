@@ -1,8 +1,12 @@
 const GpioManager = require('./gpio/manager.js');
 const WebApp = require('./web/app.js');
 const config = require('./config.js');
+const appUser = require("os").userInfo().username;
 
-console.log("Attempting to run program as: " + require("os").userInfo().username);
+console.log("Attempting to run program as: " + appUser);
+if (appUser != 'root') {
+    console.warn("You might face issues with GPIO export unless you run this software as 'root'.");
+}
 
 let manager = new GpioManager();
 let webServer = new WebApp(manager);
