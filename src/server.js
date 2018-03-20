@@ -11,9 +11,14 @@ let blinkerIntervalId = 0;
 webServer.on('blinker.on', startBlinking);
 webServer.on('blinker.off', stopBlinking);
 
+/*
+let commandProcessor = new CommandProcessor(manager, webServer, serialClient)
+*/
+
 process.on('SIGINT', () => {
     manager.shutdown();
     webServer.shutdown();
+    // commandProcessor.shutdown();
 
     process.exit(0);
 });
