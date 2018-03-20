@@ -17,7 +17,7 @@ class GarageDoorOpenerServer {
         this.manager = new GpioManager(this);
         this.webServer = new WebApp(this, this.manager);
         this.serialClient = new SerialClient(this);
-        this.commandProcessor = new CommandProcessor(this, this.manager, this.webServer, this.serialClient);
+        this.commandProcessor = new CommandProcessor(this);
 
         this.registerBlinker();
     }

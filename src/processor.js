@@ -2,12 +2,12 @@
 const EventEmitter = require('events').EventEmitter;
 
 class CommandProcessor extends EventEmitter {
-    constructor(server, manager, webServer, serialClient) {
+    constructor(server) {
         super();
         this.server = server;
-        this.gpioManager = manager;
-        this.webServer = webServer;
-        this.serialClient = serialClient;
+        this.gpioManager = server.manager;
+        this.webServer = server.webServer;
+        this.serialClient = server.serialClient;
     }
 
     shutdown() {
