@@ -1,0 +1,23 @@
+{
+  "name": "garage-door-opener",
+  "description": "Opens and closes the garage doors via serial or Wi-Fi",
+  "version": "v0.0.1",
+  "maintainers": [
+    {
+      "name": "Lachezar Tsochev",
+      "email": "ltsochev@live.com",
+      "web": "https://github.com/ltsochev"
+    }
+  ],
+  "dependencies": {
+    "express": "^4.16.3",
+    "onoff": "^2.0.0",
+    "serialport": "^6.1.1"
+  },
+  "licenses": [
+    {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  ]
+}
