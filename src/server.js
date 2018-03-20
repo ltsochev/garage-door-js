@@ -13,7 +13,7 @@ class GarageDoorOpenerServer {
             console.warn("You might face issues with GPIO export unless you run this software as 'root'.");
         }
 
-        this.blinkerIntervalId = 0;
+        this.blinkerIntervalId = null;
         this.manager = new GpioManager(this);
         this.webServer = new WebApp(this, this.manager);
         this.serialClient = new SerialClient(this);
@@ -28,12 +28,11 @@ class GarageDoorOpenerServer {
     }
 
     _blinkerStart() {
-        if (this.blinkerIntervalId > 0) { return console.warn("Blinker is already running"); }
+        if (this.blinkerIntervalId) { return console.warn("Blinker is already running"); }
 
         let self = this;
 
         this.blinkerIntervalId = setInterval(() => {
-            console.log('Blink!');
             let pin = self.manager.getPin(config.blinker.pin);
             if (pin) {
                 pin.write(pin.read() ^ 1);
@@ -42,8 +41,12 @@ class GarageDoorOpenerServer {
     }
 
     _blinkerStop() {
-        console.log('Killing blinker.');
         clearInterval(this.blinkerIntervalId);
+        this.blinkerIntervalId = null;
+        let pin = this.manager.getPin(config.blinker.pin);
+        if (pin) {
+            pin.write(0);
+        }
     }
 
     close() {

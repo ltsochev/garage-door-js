@@ -13,7 +13,7 @@ config.web = {
 config.pins.push({id: 23, defaultValue: 0, direction: 'out', edge: 'none'});
 
 config.serial = {
-    port: '/dev/tty/ttyAMA0',
+    port: '/dev/ttyAMA0',
     baud_rate: 9600
 }
 

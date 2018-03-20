@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require('express');
 const config = require('../config.js');
 const EventEmitter = require('events').EventEmitter;
@@ -32,8 +33,10 @@ class WebApp extends EventEmitter {
     }
 
     _getHomePage(req, res) {
-        var links = '<a href="/blink/on">Enable LED</a> | <a href="/blink/off">Disable LED</a>';
-        res.send('Garage door opener says Hello world! <br />' + links);
+        /*var links = '<a href="/blink/on">Enable LED</a> | <a href="/blink/off">Disable LED</a>';
+        res.send('Garage door opener says Hello world! <br />' + links);*/
+        // let body = fs.readFileSync('./src/views/dashboard.html');
+        res.sendFile(path.join(__dirname + '/../views/dashboard.html'));
     }
 
     _getBlinkOn(req, res) {
