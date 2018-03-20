@@ -3,11 +3,12 @@ const config = require('../config.js');
 const EventEmitter = require('events').EventEmitter;
 
 class WebApp extends EventEmitter {
-    constructor(gpioManager) {
+    constructor(server, gpioManager) {
         super();
         this.gpioManager = gpioManager;
         this.secretKey = config.web.key;
         this.bindPort = config.web.listen;
+        this.server = server;
         this.httpServer;
         
         this.app = express();

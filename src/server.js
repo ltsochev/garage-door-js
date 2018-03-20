@@ -1,44 +1,56 @@
+const SerialClient = require('./serial/client.js');
+const CommandProcessor = require('./processor.js');
 const GpioManager = require('./gpio/manager.js');
 const WebApp = require('./web/app.js');
 const config = require('./config.js');
 const appUser = require("os").userInfo().username;
 
-console.log("Attempting to run program as: " + appUser);
-if (appUser != 'root') {
-    console.warn("You might face issues with GPIO export unless you run this software as 'root'.");
-}
-
-let manager = new GpioManager();
-let webServer = new WebApp(manager);
-let blinkerIntervalId = 0;
-
-webServer.on('blinker.on', startBlinking);
-webServer.on('blinker.off', stopBlinking);
-
-/*
-let commandProcessor = new CommandProcessor(manager, webServer, serialClient)
-*/
-
-process.on('SIGINT', () => {
-    manager.shutdown();
-    webServer.shutdown();
-    // commandProcessor.shutdown();
-
-    process.exit(0);
-});
-
-function startBlinking() {
-    if ( blinkerIntervalId > 0 ) { return; }
-
-    blinkerIntervalId = setInterval(() => {
-        let pin = manager.getPin(config.blinker.pin);
-
-        if (pin) {
-            pin.write(pin.read() ^ 1);
+class GarageDoorOpenerServer {
+    constructor() {
+        
+        console.log("Attempting to run program as: " + appUser);
+        if (appUser != 'root') {
+            console.warn("You might face issues with GPIO export unless you run this software as 'root'.");
         }
-    }, config.blinker.interval);
+
+        this.blinkerIntervalId = 0;
+        this.manager = new GpioManager(this);
+        this.webServer = new WebApp(this, this.manager);
+        this.serialClient = new SerialClient(this);
+        this.commandProcessor = new CommandProcessor(this, this.manager, this.webServer, this.serialClient);
+
+        this.registerBlinker();
+    }
+
+    registerBlinker() {
+        this.webServer.on('blinker.on', this._blinkerStart.bind(this));
+        this.webServer.on('blinker.off', this._blinkerStop.bind(this));
+    }
+
+    _blinkerStart() {
+        if (this.blinkerIntervalId > 0) { return console.warn("Blinker is already running"); }
+
+        let self = this;
+
+        this.blinkerIntervalId = setInterval(() => {
+            console.log('Blink!');
+            let pin = self.manager.getPin(config.blinker.pin);
+            if (pin) {
+                pin.write(pin.read() ^ 1);
+            }
+        }, config.blinker.interval);
+    }
+
+    _blinkerStop() {
+        console.log('Killing blinker.');
+        clearInterval(this.blinkerIntervalId);
+    }
+
+    close() {
+        this.manager.shutdown();
+        this.webServer.shutdown();
+        this.commandProcessor.shutdown();
+    }
 }
 
-function stopBlinking() {
-    clearInterval(blinkerIntervalId);
-}
+module.exports = GarageDoorOpenerServer;

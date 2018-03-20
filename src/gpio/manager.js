@@ -4,8 +4,9 @@ let config = require('../config.js');
 const GpioPin = require('./pin.js');
 
 class GpioManager {
-    constructor() {
+    constructor(server) {
         this.pins = [];
+        this.server = server;
         this.initPins();
     }
 
