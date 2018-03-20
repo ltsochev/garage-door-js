@@ -3,6 +3,8 @@ const SerialPort = require('serialport');
 const Gpio = require('onoff').Gpio;
 const app = express();
 
+console.log("Running program as: " + require("os").userInfo().username);
+
 let intervalId = 0,
     intervalMs = 800,
     ledState = false;
