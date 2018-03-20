@@ -1,48 +1,35 @@
-const express = require('express');
-const SerialPort = require('serialport');
-const Gpio = require('onoff').Gpio;
-const app = express();
+const GpioManager = require('./gpio/manager.js');
+const WebApp = require('./web/app.js');
+const config = require('./config.js');
 
-console.log("Running program as: " + require("os").userInfo().username);
+console.log("Attempting to run program as: " + require("os").userInfo().username);
 
-let intervalId = 0,
-    intervalMs = 800,
-    ledState = false;
-    led = new Gpio(23, 'out');
+let manager = new GpioManager();
+let webServer = new WebApp(manager);
+let blinkerIntervalId = 0;
 
-app.get('/', (req, res) => {
-    var links = '<a href="/blink/on">Enable LED</a> | <a href="/blink/off">Disable LED</a>';
-    res.send('Garage door opener says Hello world! <br />' + links);
+webServer.on('blinker.on', startBlinking);
+webServer.on('blinker.off', stopBlinking);
+
+process.on('SIGINT', () => {
+    manager.shutdown();
+    webServer.shutdown();
+
+    process.exit(0);
 });
-
-app.get('/blink/on', (req, res) => {
-    startBlinking();
-    res.send("LED blinking enabled on period of " + intervalMs + "ms.");
-});
-
-app.get('/blink/off', (req, res) => {
-    stopBlinking()
-    res.send("LED blinking is disabled.");
-})
-
-app.listen(1337, () => console.log("Garage door server is listening on port 1337"));
-
-process.on('SIGINT', function () {
-    led.unexport();
-  });
 
 function startBlinking() {
-    intervalId = setInterval(() => {
-        ledState = !ledState;
-        let value = + ledState;
-        led.writeSync(value);
-    }, intervalMs);
+    if ( blinkerIntervalId > 0 ) { return; }
+
+    blinkerIntervalId = setInterval(() => {
+        let pin = manager.getPin(config.blinker.pin);
+
+        if (pin) {
+            pin.write(pin.read() ^ 1);
+        }
+    }, config.blinker.interval);
 }
 
 function stopBlinking() {
-    clearInterval(intervalId);
-
-    ledState = false;
-
-    led.writeSync(0);
+    clearInterval(blinkerIntervalId);
 }
