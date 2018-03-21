@@ -14,12 +14,15 @@ class GarageDoorOpenerServer {
         }
 
         this.blinkerIntervalId = null;
+        this.broadcastStatsTimer = null;
         this.manager = new GpioManager(this);
         this.webServer = new WebApp(this, this.manager);
         this.serialClient = new SerialClient(this);
         this.commandProcessor = new CommandProcessor(this);
 
         this.registerBlinker();
+
+        this.broadcastStatus();
     }
 
     registerBlinker() {
@@ -27,6 +30,25 @@ class GarageDoorOpenerServer {
         this.webServer.on('blinker.off', this._blinkerStop.bind(this));
         this.webServer.on('blinker.enable', this._blinkerEnable.bind(this));
         this.webServer.on('blinker.disable', this._blinkerDisable.bind(this));
+    }
+
+    broadcastStatus() {
+        if (this.broadcastStatsTimer != null) { return console.warn('Broadcasting is already running.'); }
+
+        let self = this;
+        
+        this.broadcastStatsTimer = setInterval(() => {
+            self.webServer.io.emit('server status', self.getServerStatus());
+        }, 1500);
+    }
+
+    getServerStatus() {
+        return {
+            time: new Date(),
+            serial: this.serialClient.isRunning() ? 'running' : 'stopped',
+            gate: 'closed',
+            users: this.webServer.io.engine.clientsCount
+        }
     }
 
     _blinkerStart() {

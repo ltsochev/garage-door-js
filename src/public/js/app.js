@@ -1,4 +1,5 @@
-(function($, axios) {
+(function($, axios, io) {
+    'use strict'
 
     var $element = $('#blinker-trigger');
 
@@ -30,4 +31,10 @@
             });
     }
 
-})(jQuery, window.axios);
+    var socket = io();
+
+    socket.on('server status', function(msg) {
+        $('#server-status').text(JSON.stringify(msg));
+    })
+
+})(jQuery, window.axios, io);

@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require('express');
+const io = require('socket.io');
 const config = require('../config.js');
 const EventEmitter = require('events').EventEmitter;
 
@@ -11,13 +12,19 @@ class WebApp extends EventEmitter {
         this.bindPort = config.web.listen;
         this.server = server;
         this.httpServer;
-    
+        this.socketio;
+        
         let publicPath = path.join(__dirname, "../public");
         this.app = express();
         this.app.use('/public', express.static(publicPath));
 
         this.registerRoutes();
         this.beginListen();
+        this.initSocketIO();
+    }
+
+    get io() {
+        return this.socketio;
     }
 
     registerRoutes() {
@@ -30,6 +37,16 @@ class WebApp extends EventEmitter {
 
     beginListen() {
         this.httpServer = this.app.listen(this.bindPort, this._onBindHandler.bind(this));
+        this.socketio = io(this.httpServer);
+    }
+
+    initSocketIO() {
+        this.socketio.on('connection', (socket) => {
+            console.log('user connected.');
+            socket.on('disconnect', () => {
+                console.log('user disconnected');
+            })
+        })
     }
 
     _onBindHandler() {

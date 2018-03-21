@@ -18,6 +18,10 @@ class SerialClient extends EventEmitter {
         })
     }
 
+    isRunning() {
+        return !!this.serialPort;
+    }
+
     shutdown() {
 
     }
