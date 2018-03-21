@@ -24,6 +24,8 @@ class WebApp extends EventEmitter {
         this.app.get('/', this._getHomePage);
         this.app.get('/blink/on', this._getBlinkOn.bind(this));
         this.app.get('/blink/off', this._getBlinkOff.bind(this));
+        this.app.post('/blinker/enable', this._postBlinkOn.bind(this));
+        this.app.post('/blinker/disable', this._postBlinkOff.bind(this));
     }
 
     beginListen() {
@@ -46,6 +48,16 @@ class WebApp extends EventEmitter {
     _getBlinkOff(req, res) {
         this.emit('blinker.off');
         res.redirect('/');
+    }
+
+    _postBlinkOn(req, res) {
+        this.emit('blinker.enable');
+        res.json({status: 10, message: 'ok'});
+    }
+
+    _postBlinkOff(req, res) {
+        this.emit('blinker.disable');
+        res.json({status: 10, message: 'ok'});
     }
 
     shutdown() {

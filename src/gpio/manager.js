@@ -35,6 +35,15 @@ class GpioManager {
         }
     }
 
+    pinAction(id, callbackFn) {
+        let pin = this.getPin(id);
+        if (pin && typeof(callbackFn) == 'function') {
+            callbackFn.call(this, pin);
+        }
+
+        return pin;
+    }
+
     shutdown() {
         for(let i = 0; i < this.pins.length; i++) {
             let pin = this.pins[i];

@@ -24,5 +24,7 @@ h6 {
 
 .page-body {
     margin-top: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     background: #4c5c6c;
 }

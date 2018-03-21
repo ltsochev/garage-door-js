@@ -19,6 +19,7 @@
 
     <script src="/public/js/jquery-3.3.1.min.js"></script>
     <script src="/public/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/js/axios.min.js"></script>
 </head>
 <body>
     <header>
@@ -32,7 +33,19 @@
     </header>
 
     <section id="app" class="page-body-area">
-
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 page-body">
+                    <div class="text-center">
+                        <a href="/blink/on" class="btn btn-secondary">Enable LED</a>
+                        <a href="/blink/off" class="btn btn-secondary">Disable LED</a>
+                        <a id="blinker-trigger" href="#" class="btn btn-secondary">Manual LED</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </section>
     
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script> -->

@@ -25,6 +25,8 @@ class GarageDoorOpenerServer {
     registerBlinker() {
         this.webServer.on('blinker.on', this._blinkerStart.bind(this));
         this.webServer.on('blinker.off', this._blinkerStop.bind(this));
+        this.webServer.on('blinker.enable', this._blinkerEnable.bind(this));
+        this.webServer.on('blinker.disable', this._blinkerDisable.bind(this));
     }
 
     _blinkerStart() {
@@ -47,6 +49,17 @@ class GarageDoorOpenerServer {
         if (pin) {
             pin.write(0);
         }
+    }
+
+    _blinkerEnable() {
+        this._blinkerStop();
+        console.log('Attempting manual enable.');
+        this.manager.pinAction(config.blinker.pin, (pin) => pin.write(1));
+    }
+
+    _blinkerDisable() {
+        console.log('Attempting manual disable.');
+        this._blinkerStop();
     }
 
     close() {
