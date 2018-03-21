@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "garage-door-opener",
   "description": "Opens and closes the garage doors via serial or Wi-Fi",
   "version": "v0.0.1",
@@ -13,6 +14,14 @@
     "express": "^4.16.3",
     "onoff": "^2.0.0",
     "serialport": "^6.1.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.0.5",
+    "laravel-mix": "^2.1.11",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.4.4"
   },
   "licenses": [
     {

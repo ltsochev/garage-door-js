@@ -1,0 +1,28 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #293e51;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.7;
+    overflow-x: hidden;
+    letter-spacing: 1px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+}
+
+.page-body {
+    margin-top: 30px;
+    background: #4c5c6c;
+}

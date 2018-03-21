@@ -11,8 +11,10 @@ class WebApp extends EventEmitter {
         this.bindPort = config.web.listen;
         this.server = server;
         this.httpServer;
-        
+    
+        let publicPath = path.join(__dirname, "../public");
         this.app = express();
+        this.app.use('/public', express.static(publicPath));
 
         this.registerRoutes();
         this.beginListen();
@@ -33,9 +35,6 @@ class WebApp extends EventEmitter {
     }
 
     _getHomePage(req, res) {
-        /*var links = '<a href="/blink/on">Enable LED</a> | <a href="/blink/off">Disable LED</a>';
-        res.send('Garage door opener says Hello world! <br />' + links);*/
-        // let body = fs.readFileSync('./src/views/dashboard.html');
         res.sendFile(path.join(__dirname + '/../views/dashboard.html'));
     }
 
