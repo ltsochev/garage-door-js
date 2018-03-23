@@ -41,6 +41,16 @@
         str.push("Users Connected: " + msg.users);
         
         $('#server-status').text(str.join(', '));
-    })
+    });
+
+    setInterval(function() {
+        socket.emit('latency', Date.now(), function(startTime) {
+            var latency = Date.now() - startTime;
+            var latencyStr = latency + 'ms.';
+
+            $('#ping').text('Ping: ' + latencyStr);
+
+        })
+    }, 2000);
 
 })(jQuery, window.axios, io);

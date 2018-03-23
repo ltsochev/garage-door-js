@@ -45,6 +45,8 @@ class WebApp extends EventEmitter {
             console.log('user connected.');
             socket.on('disconnect', () => {
                 console.log('user disconnected');
+            }).on('latency', (startTime, cb) => {
+                cb(startTime);
             })
         })
     }
