@@ -34,7 +34,13 @@
     var socket = io();
 
     socket.on('server status', function(msg) {
-        $('#server-status').text(JSON.stringify(msg));
+        var time = new Date(msg.time);
+        var str = ["Server Time: " + time.toTimeString()]
+        str.push("Gate State: " + msg.gate);
+        str.push("Bluetooth State: " + msg.serial);
+        str.push("Users Connected: " + msg.users);
+        
+        $('#server-status').text(str.join(', '));
     })
 
 })(jQuery, window.axios, io);
