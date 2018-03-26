@@ -43,6 +43,10 @@
         $('#server-status').text(str.join(', '));
     });
 
+    socket.on('serial.recv', function(data) {
+        $('#serial-response').text(data);
+    });
+
     setInterval(function() {
         socket.emit('latency', Date.now(), function(startTime) {
             var latency = Date.now() - startTime;
@@ -52,5 +56,18 @@
 
         })
     }, 2000);
+
+    $('#serial-form').submit(function(e) {
+        e.preventDefault();
+
+        var $input = $('#serialInput'),
+            serialData = $input.val();
+        
+        $input.val('');
+
+        socket.emit('serial.send', serialData, function(res) {
+            $('#serial-response').text(res);
+        });
+    });
 
 })(jQuery, window.axios, io);

@@ -30,6 +30,8 @@ class GarageDoorOpenerServer {
         this.webServer.on('blinker.off', this._blinkerStop.bind(this));
         this.webServer.on('blinker.enable', this._blinkerEnable.bind(this));
         this.webServer.on('blinker.disable', this._blinkerDisable.bind(this));
+
+        this.serialClient.on('serial.recv', this._serialReceived.bind(this));
     }
 
     broadcastStatus() {
@@ -82,6 +84,10 @@ class GarageDoorOpenerServer {
     _blinkerDisable() {
         console.log('Attempting manual disable.');
         this._blinkerStop();
+    }
+
+    _serialReceived(data) {
+        self.webServer.io.emit('serial.recv', data);
     }
 
     close() {

@@ -15,7 +15,19 @@ class SerialClient extends EventEmitter {
             if (err) {
                 return console.error("Serial Error: ", err.message);
             }
-        })
+        });
+
+        this.init();
+    }
+
+    init() {
+        let self = this;
+
+        this.serialPort.on('data', function (data) { self.emit('serial.recv', data); });
+    }
+
+    send(message) {
+        this.serialPort.write(message);
     }
 
     isRunning() {
@@ -23,7 +35,7 @@ class SerialClient extends EventEmitter {
     }
 
     shutdown() {
-
+        this.serialPort.close();
     }
 }
 
