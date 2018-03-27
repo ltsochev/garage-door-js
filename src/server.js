@@ -1,6 +1,7 @@
 const SerialClient = require('./serial/client.js');
 const CommandProcessor = require('./processor.js');
 const GpioManager = require('./gpio/manager.js');
+const Signature = require('./security/signature.js');
 const WebApp = require('./web/app.js');
 const config = require('./config.js');
 const appUser = require("os").userInfo().username;
@@ -15,12 +16,15 @@ class GarageDoorOpenerServer {
 
         this.blinkerIntervalId = null;
         this.broadcastStatsTimer = null;
+        this.signatureGenerator = new Signature(config.security.hash, config.security.sigParam);
         this.manager = new GpioManager(this);
         this.webServer = new WebApp(this, this.manager);
         this.serialClient = new SerialClient(this);
         this.commandProcessor = new CommandProcessor(this);
 
         this.registerBlinker();
+
+        this.registerSerialClient();
 
         this.broadcastStatus();
     }
@@ -30,7 +34,10 @@ class GarageDoorOpenerServer {
         this.webServer.on('blinker.off', this._blinkerStop.bind(this));
         this.webServer.on('blinker.enable', this._blinkerEnable.bind(this));
         this.webServer.on('blinker.disable', this._blinkerDisable.bind(this));
-
+    }
+    
+    registerSerialClient() {
+        this.webServer.io.emit('serial.recv', 'Waiting for serial commands.');
         this.serialClient.on('serial.recv', this._serialReceived.bind(this));
     }
 
@@ -87,13 +94,15 @@ class GarageDoorOpenerServer {
     }
 
     _serialReceived(data) {
-        self.webServer.io.emit('serial.recv', data);
+        console.log('Serial data received: ', data);
+        this.webServer.io.emit('serial.recv', data);
     }
 
     close() {
         this.manager.shutdown();
-        this.webServer.shutdown();
         this.commandProcessor.shutdown();
+        this.webServer.shutdown();
+        this.serialClient.shutdown();
     }
 }
 

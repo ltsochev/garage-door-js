@@ -44,6 +44,7 @@
     });
 
     socket.on('serial.recv', function(data) {
+        console.log(data);
         $('#serial-response').text(data);
     });
 

@@ -4,6 +4,7 @@ config.serial = {};
 config.pins = [];
 config.web = {};
 config.blinker = {}
+config.security = {};
 
 config.web = {
     listen: 1337,
@@ -20,6 +21,11 @@ config.serial = {
 config.blinker = {
     pin: 23,
     interval: 200
+}
+
+config.security = {
+    hash: 'I1QA0FA0VZMCRE2DZU458ZXJBRG1EV6UF0D9TF8B',
+    sigParam: 'cid'
 }
 
 module.exports = config;
