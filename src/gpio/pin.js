@@ -6,6 +6,7 @@ class Pin {
         this.direction = config.direction;
         this.edge = config.edge;
         this.unexported = false;
+        this.labelStr = config.label || config.id;
 
         this.gpio = new Gpio(this.pinId, this.direction, this.edge);
         this.write(config.defaultValue);
@@ -13,6 +14,14 @@ class Pin {
 
     get id() {
         return this.pinId;
+    }
+
+    get label() {
+        return this.labelStr;
+    }
+    
+    toggle() {
+        this.write(this.read() ^ 1);
     }
 
     write(value) {

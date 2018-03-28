@@ -52,7 +52,13 @@ class WebApp extends EventEmitter {
             }).on('serial.send', (serialData, cb) => {
                 let res = self.server.serialClient.send(serialData);
                 cb('waiting');
-            })
+            }).on('relay.toggle', (relay, callbackFn) => {
+                this.gpioManager.pinAction(relay, (pin) => {
+                    pin.toggle();
+                    callbackFn("Relay toggled.");
+                });
+            });
+
         })
     }
 

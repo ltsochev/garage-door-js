@@ -48,6 +48,10 @@
         $('#serial-response').text(data);
     });
 
+    socket.on('relay.toggle', function() {
+        console.log(arguments);
+    });
+
     setInterval(function() {
         socket.emit('latency', Date.now(), function(startTime) {
             var latency = Date.now() - startTime;
@@ -68,6 +72,15 @@
 
         socket.emit('serial.send', serialData, function(res) {
             $('#serial-response').text(res);
+        });
+    });
+
+    $('#relay-controller').find('button').click(function(e) {
+       var $this = $(this),
+            relay = $this.data('relay');
+        
+        socket.emit('relay.toggle', relay, function(res) {
+            console.log(res);
         });
     });
 

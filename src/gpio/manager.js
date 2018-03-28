@@ -29,7 +29,7 @@ class GpioManager {
         for(let i = 0; i < this.pins.length; i++) {
             let pin = this.pins[i];
 
-            if (pin.id == id) {
+            if (pin.id == id || pin.label == id) {
                 return pin;
             }
         }
